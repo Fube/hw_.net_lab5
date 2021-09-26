@@ -19,6 +19,7 @@ namespace GuitarShop.Controllers
             return RedirectToAction("List", "Product");
         }
 
+        // Binds to Products and not Product/List
         [Route("[controller]s/{id?}")]
         public IActionResult List(string id = "All")
         {
@@ -29,6 +30,12 @@ namespace GuitarShop.Controllers
             if (id == "All")
             {
                 products = context.Products
+                    .OrderBy(p => p.ProductID).ToList();
+            }
+            else if(id == "Strings")
+            {
+                products = context.Products
+                    .Where(p => p.Category.Name == "Guitars" || p.Category.Name == "Basses")
                     .OrderBy(p => p.ProductID).ToList();
             }
             else
