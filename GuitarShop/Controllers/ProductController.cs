@@ -23,23 +23,28 @@ namespace GuitarShop.Controllers
         [Route("[controller]s/{id?}")]
         public IActionResult List(string id = "All")
         {
+
+            // Fetches all categories regardless of id
             var categories = context.Categories
                 .OrderBy(c => c.CategoryID).ToList();
 
             List<Product> products;
             if (id == "All")
             {
+                // Fetches all products if id is null
                 products = context.Products
                     .OrderBy(p => p.ProductID).ToList();
             }
             else if(id == "Strings")
             {
+                // Filter by category to only include "String" products and sort by ID
                 products = context.Products
                     .Where(p => p.Category.Name == "Guitars" || p.Category.Name == "Basses")
                     .OrderBy(p => p.ProductID).ToList();
             }
             else
             {
+                // Filter to only include products in the category with the specified id
                 products = context.Products
                     .Where(p => p.Category.Name == id)
                     .OrderBy(p => p.ProductID).ToList();
@@ -49,6 +54,7 @@ namespace GuitarShop.Controllers
             ViewBag.Categories = categories;
             ViewBag.SelectedCategoryName = id;
 
+            // Sets the SelectedCategoryName to "Strings" if the id is "Strings"
             if (id == "Strings")
             {
                 ViewBag.SelectedCategoryName = "Strings";
@@ -58,6 +64,7 @@ namespace GuitarShop.Controllers
             return View(products);
         }
 
+        // Fetches details about a specific product by id
         public IActionResult Details(int id)
         {
             var categories = context.Categories
